@@ -1,0 +1,38 @@
+# Dependency directories
+/Backend/node_modules/
+/Frontend/node_modules/
+
+# Build outputs
+/Frontend/.next/
+/Frontend/out/
+/Frontend/.vercel/
+/Backend/uploads/
+
+# Python virtual environments
+/Model/venv/
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Model artifacts & datasets
+/Model/checkpoints/
+/Model/Dataset/
+/Model/train_logs/
+
+# Environment files
+.env
+.env.*
+.envrc
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+
+
