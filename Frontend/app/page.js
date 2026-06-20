@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
@@ -100,13 +101,13 @@ export default function Home() {
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-blue-400/20 dark:from-green-600/10 dark:to-blue-600/10 rounded-3xl blur-2xl"></div>
-                <img
+                <Image
                   src="/images/photu.png"
                   alt="Waste Management"
+                  width={800}
+                  height={600}
                   className="relative w-full h-auto object-contain"
-                  onError={(e) => {
-                    e.target.src = "https://illustrations.popsy.co/green/environmental-study.svg";
-                  }}
+                  loading="lazy"
                 />
               </div>
             </motion.div>

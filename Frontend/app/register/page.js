@@ -7,7 +7,9 @@ import { useAuth } from "@/context/AuthContext";
 import API from "@/lib/api";
 import { motion } from "framer-motion";
 
-export default function Register() {
+import { Suspense } from "react";
+
+function RegisterContent() {
   const searchParams = useSearchParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -276,3 +278,10 @@ export default function Register() {
   );
 }
 
+export default function Register() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <RegisterContent />
+    </Suspense>
+  );
+}

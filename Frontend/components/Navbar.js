@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -42,7 +43,7 @@ const Navbar = ({ footerRef }) => {
       <LoadingBar color="#933ce6" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="text-lg font-bold text-green-600 dark:text-green-400">
-          <img src="/images/Logoooo.png" alt="WALL.E" className="w-10 h-10" />
+          <Image src="/images/Logoooo.png" alt="WALL.E" width={40} height={40} className="w-10 h-10" loading="lazy" />
         </Link>
         <div className="hidden md:flex space-x-4 items-center">
           <Link href="/" className="hover:scale-105 hover:font-semibold transition-transform duration-300">

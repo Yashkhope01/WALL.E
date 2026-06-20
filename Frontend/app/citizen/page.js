@@ -335,16 +335,17 @@ function CitizenDashboardContent() {
                   className="relative"
                 >
                   <div className="bg-gray-900 rounded-lg overflow-hidden">
-                    <img
-                      src={capturedPreview}
-                      alt="Captured preview"
-                      className="w-full h-auto max-h-[70vh] object-contain"
-                      onError={() => {
-                        console.error("Failed to load preview image");
-                        setMessage("Failed to load preview. Please try again.");
-                        setCapturedPreview(null);
-                      }}
-                    />
+                      <img
+                        src={capturedPreview}
+                        alt="Captured preview"
+                        className="w-full h-auto max-h-[70vh] object-contain"
+                        loading="lazy"
+                        onError={() => {
+                          console.error("Failed to load preview image");
+                          setMessage("Failed to load preview. Please try again.");
+                          setCapturedPreview(null);
+                        }}
+                      />
                   </div>
                   <div className="absolute top-4 left-0 right-0 flex justify-center">
                     <div className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
@@ -517,6 +518,7 @@ function CitizenDashboardContent() {
                           src={preview}
                           alt="Preview"
                           className="max-h-64 mx-auto rounded-lg"
+                          loading="lazy"
                         />
                         <Button
                           type="button"

@@ -4,7 +4,7 @@
   "private": true,
   "description": "A modern waste management platform with role-based dashboards, real-time reporting, and AI-powered waste classification",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
