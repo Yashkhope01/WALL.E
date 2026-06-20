@@ -1,0 +1,18 @@
+# WALL.E — Waste Classifier API Requirements (Faster RCNN Edition)
+# Install with: pip install -r requirements_api.txt
+
+# Core ML — Faster RCNN backbone
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Image processing
+Pillow>=10.0.0
+numpy>=1.24.0
+opencv-python>=4.8.0
+
+# API framework
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# Data (needed when loading custom CSV label mappings)
+pandas>=2.0.0

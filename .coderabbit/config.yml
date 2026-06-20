@@ -1,0 +1,17 @@
+version: 1
+
+review:
+  # Review all PRs
+  auto_review: true
+
+  # Review when someone comments "/review"
+  trigger_pattern: ["review"]
+
+  # Review changed files
+  changed_files_only: true
+
+  # Provide improvement suggestions
+  suggestions: true
+
+  # Depth: how detailed the review should be (1–3)
+  depth: 2
