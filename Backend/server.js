@@ -26,14 +26,23 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (curl, Postman, Render health checks)
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (like mobile apps, curl, postman, server-to-server)
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    // Check if origin is allowed or if wildcard '*' is in allowedOrigins
+    const isAllowed = allowedOrigins.includes(origin) || allowedOrigins.includes('*');
+
+    if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error(`CORS: origin '${origin}' not allowed`));
+      console.warn(`CORS Blocked: Origin '${origin}' is not in allowed origins list:`, allowedOrigins);
+      callback(null, false); // Reject without throwing 500 error
     }
   },
   credentials: true,
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
 // --- SETUP AND MIDDLEWARE ---
