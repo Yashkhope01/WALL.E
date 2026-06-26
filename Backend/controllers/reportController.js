@@ -63,7 +63,6 @@ const FALLBACK_CATEGORY_INFO = {
 function fallbackClassify() {
   const types = ['Wet', 'Dry', 'E-Waste', 'Mixed'];
   const wasteType = types[Math.floor(Math.random() * types.length)];
-  // Generate a mock confidence between 75% and 95%
   const confidence = parseFloat((0.75 + Math.random() * 0.20).toFixed(4));
   const confidencePercent = Math.round(confidence * 100);
 
@@ -275,7 +274,7 @@ exports.submitReport = async (req, res) => {
         confidencePercent: aiResult.confidencePercent,
         categoryDetail: aiResult.categoryDetail,
         categoryInfo: aiResult.categoryInfo,
-        aiPowered: aiResult.aiPowered  // flag from the classification result (true for AI service, false for fallback)
+        aiPowered: aiResult.aiPowered
       },
       gamification: {
         pointsEarned,
