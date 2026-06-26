@@ -58,7 +58,7 @@ app = Flask(__name__)
 CORS(app)
 
 print("=" * 65)
-print("  WALL.E — Faster RCNN Waste Classification Service  ")
+print("  WALL.E - Faster RCNN Waste Classification Service  ")
 print("=" * 65)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -110,8 +110,8 @@ def load_coco_model():
     label_mapper = map_coco_label_to_waste_category
     model_source = "coco"
 
-    print("  ✓ COCO model loaded  (80 object classes → 4 waste categories)")
-    print("  ℹ To use your custom trained model, place best_model.pth in Model/checkpoints/")
+    print("  [OK] COCO model loaded  (80 object classes -> 4 waste categories)")
+    print("  [INFO] To use your custom trained model, place best_model.pth in Model/checkpoints/")
 
 
 def load_custom_model():
@@ -144,7 +144,7 @@ def load_custom_model():
     label_mapper = map_custom_label_to_waste_category
     model_source = "custom"
 
-    print(f"  ✓ Custom model loaded  ({num_classes - 1} waste classes → 4 categories)")
+    print(f"  [OK] Custom model loaded  ({num_classes - 1} waste classes -> 4 categories)")
     return True
 
 
@@ -155,7 +155,7 @@ try:
     else:
         load_coco_model()
 except Exception as e:
-    print(f"\n  ⚠  Could not load custom model ({e}). Falling back to COCO model.")
+    print(f"\n  [WARNING] Could not load custom model ({e}). Falling back to COCO model.")
     load_coco_model()
 
 print("=" * 65)
@@ -439,15 +439,15 @@ def model_info():
 # ─── MAIN ───────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    print("\n🚀 Starting WALL.E Faster RCNN Waste Classification API")
-    print("📡 Listening on http://localhost:5001")
+    print("\n[START] Starting WALL.E Faster RCNN Waste Classification API")
+    print("Listening on http://localhost:5001")
     print("")
     print("  Endpoints:")
-    print("    GET  /health          → Health check + model info")
-    print("    GET  /categories      → Waste category metadata")
-    print("    GET  /model/info      → Detailed model info")
-    print("    POST /classify        → Classify image (file/base64/path)")
-    print("    POST /classify/path   → Classify by absolute file path")
+    print("    GET  /health          -> Health check + model info")
+    print("    GET  /categories      -> Waste category metadata")
+    print("    GET  /model/info      -> Detailed model info")
+    print("    POST /classify        -> Classify image (file/base64/path)")
+    print("    POST /classify/path   -> Classify by absolute file path")
     print("")
     print("  Quick test:")
     print("    curl http://localhost:5001/health")
@@ -456,5 +456,5 @@ if __name__ == "__main__":
     print("=" * 65)
 
     port = int(os.environ.get("PORT", 7860))
-    print(f"📡 Listening on http://0.0.0.0:{port}")
+    print(f"Listening on http://0.0.0.0:{port}")
     app.run(host="0.0.0.0", port=port, debug=False, threaded=True)
