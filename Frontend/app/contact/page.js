@@ -68,21 +68,21 @@ const ContactPage = () => {
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             {[
               {
-                icon: "📧",
+                icon: "",
                 title: "Email",
                 contact: "contact@walle-ai.com",
                 detail: "Response within 24 hours",
                 href: "mailto:contact@walle-ai.com"
               },
               {
-                icon: "📞",
+                icon: "",
                 title: "Phone",
                 contact: "+91 98765 43210",
                 detail: "Mon-Fri, 9AM-6PM IST",
                 href: "tel:+919876543210"
               },
               {
-                icon: "📍",
+                icon: "",
                 title: "Office",
                 contact: "Mumbai, India",
                 detail: "Headquarters",
@@ -136,7 +136,7 @@ const ContactPage = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-green-50 dark:bg-green-900/20 border-2 border-green-600 rounded-2xl p-8 text-center"
               >
-                <div className="text-5xl mb-4">✓</div>
+                <div className="text-5xl mb-4"></div>
                 <h3 className="text-2xl font-bold text-green-700 dark:text-green-400 mb-2">
                   Message Sent!
                 </h3>

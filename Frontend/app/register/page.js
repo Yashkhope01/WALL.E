@@ -74,17 +74,17 @@ function RegisterContent() {
   const getRoleInfo = () => {
     const roles = {
       Citizen: {
-        icon: "👤",
+        icon: "",
         color: "from-blue-500 to-cyan-500",
         description: "Report waste issues in your area"
       },
       Municipal: {
-        icon: "🚛",
+        icon: "",
         color: "from-green-500 to-emerald-500",
         description: "Manage waste collection"
       },
       Admin: {
-        icon: "👔",
+        icon: "",
         color: "from-purple-500 to-pink-500",
         description: "Oversee the system"
       }
@@ -236,22 +236,22 @@ function RegisterContent() {
             <div className="space-y-6">
               {[
                 {
-                  icon: "🌍",
+                  icon: "",
                   title: "Make an Impact",
                   description: "Contribute to environmental sustainability"
                 },
                 {
-                  icon: "⚡",
+                  icon: "",
                   title: "Quick & Easy",
                   description: "Report issues in seconds with our intuitive interface"
                 },
                 {
-                  icon: "🔒",
+                  icon: "",
                   title: "Secure & Private",
                   description: "Your data is protected with enterprise-grade security"
                 },
                 {
-                  icon: "📱",
+                  icon: "",
                   title: "Stay Updated",
                   description: "Track the status of your reports in real-time"
                 }

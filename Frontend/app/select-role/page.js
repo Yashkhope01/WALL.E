@@ -9,7 +9,7 @@ const roles = [
     id: "citizen",
     title: "Citizen",
     description: "Report waste issues in your area with photos and location",
-    icon: "👤",
+    icon: "",
     color: "from-blue-500 to-cyan-500",
     features: ["Upload waste photos", "Add geolocation", "Track reports", "Get AI classification"]
   },
@@ -17,7 +17,7 @@ const roles = [
     id: "municipal",
     title: "Municipal Worker",
     description: "Manage and collect reported waste in your jurisdiction",
-    icon: "🚛",
+    icon: "",
     color: "from-green-500 to-emerald-500",
     features: ["View waste reports", "Update collection status", "Route optimization", "Real-time updates"]
   },
@@ -25,7 +25,7 @@ const roles = [
     id: "admin",
     title: "Administrator",
     description: "Oversee the entire waste management system",
-    icon: "👔",
+    icon: "",
     color: "from-purple-500 to-pink-500",
     features: ["User management", "Analytics dashboard", "System monitoring", "Generate reports"]
   }
@@ -176,7 +176,7 @@ export default function SelectRole() {
         >
           <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 max-w-3xl mx-auto">
             <h3 className="text-lg font-semibold mb-2 text-blue-900 dark:text-blue-100">
-              💡 Not sure which role to choose?
+               Not sure which role to choose?
             </h3>
             <p className="text-blue-800 dark:text-blue-200">
               Most users start as Citizens to report waste issues. Municipal workers and Administrators 

@@ -43,31 +43,31 @@ function CitizenDashboardContent() {
       if (data.latitude && data.longitude) {
         setLat(data.latitude.toFixed(6));
         setLng(data.longitude.toFixed(6));
-        setMessage("📍 Location set via IP (approximate)");
+        setMessage(" Location set via IP (approximate)");
         setTimeout(() => setMessage(""), 3000);
       } else {
-        setMessage("⚠️ Could not detect location. Please enter manually.");
+        setMessage("️ Could not detect location. Please enter manually.");
         setTimeout(() => setMessage(""), 4000);
       }
     } catch {
-      setMessage("⚠️ Could not detect location. Please enter manually.");
+      setMessage("️ Could not detect location. Please enter manually.");
       setTimeout(() => setMessage(""), 4000);
     }
   };
 
   const getLocation = () => {
     if ("geolocation" in navigator) {
-      setMessage("📍 Detecting your location...");
+      setMessage(" Detecting your location...");
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLat(position.coords.latitude.toFixed(6));
           setLng(position.coords.longitude.toFixed(6));
-          setMessage("✅ Location detected!");
+          setMessage(" Location detected!");
           setTimeout(() => setMessage(""), 3000);
         },
         () => {
           // GPS denied — fall back to IP geolocation
-          setMessage("📍 GPS unavailable, trying IP location...");
+          setMessage(" GPS unavailable, trying IP location...");
           getLocationFromIP();
         },
         { enableHighAccuracy: true, timeout: 8000 }
@@ -279,7 +279,7 @@ function CitizenDashboardContent() {
         : '';
       
       setMessage(
-        `🎉 Report submitted! +${gamification.pointsEarned} points! Classification: ${report.classification}${confidenceText}`
+        ` Report submitted! +${gamification.pointsEarned} points! Classification: ${report.classification}${confidenceText}`
       );
       
       // Show badge animation if new badges earned
@@ -329,7 +329,7 @@ function CitizenDashboardContent() {
               transition={{ type: "spring", duration: 0.8 }}
               className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-2xl max-w-md mx-4"
             >
-              <h2 className="text-3xl font-bold text-center mb-4">🎊 New Badge Unlocked! 🎊</h2>
+              <h2 className="text-3xl font-bold text-center mb-4"> New Badge Unlocked! </h2>
               {newBadges.map((badge, idx) => (
                 <div key={idx} className="text-center mb-4">
                   <div className="text-6xl mb-2">{badge.icon}</div>
@@ -373,7 +373,7 @@ function CitizenDashboardContent() {
                   </div>
                   <div className="absolute top-4 left-0 right-0 flex justify-center">
                     <div className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                      ✓ Photo Captured Successfully
+                       Photo Captured Successfully
                     </div>
                   </div>
                   <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3 px-4">
@@ -383,14 +383,14 @@ function CitizenDashboardContent() {
                       variant="outline" 
                       className="bg-white/95 hover:bg-white text-gray-900"
                     >
-                      🔄 Retake
+                       Retake
                     </Button>
                     <Button 
                       onClick={confirmCapture} 
                       size="lg" 
                       className="bg-green-600 hover:bg-green-700 text-white shadow-lg"
                     >
-                      ✓ Use This Photo
+                       Use This Photo
                     </Button>
                     <Button 
                       onClick={stopCamera} 
@@ -398,7 +398,7 @@ function CitizenDashboardContent() {
                       variant="outline" 
                       className="bg-white/95 hover:bg-white text-gray-900"
                     >
-                      ✕ Cancel
+                       Cancel
                     </Button>
                   </div>
                 </motion.div>
@@ -417,7 +417,7 @@ function CitizenDashboardContent() {
                   <canvas ref={canvasRef} className="hidden" />
                   <div className="absolute top-4 left-0 right-0 flex justify-center">
                     <div className="bg-white/90 dark:bg-gray-800/90 px-4 py-2 rounded-full text-sm font-medium">
-                      📷 Position waste in frame
+                       Position waste in frame
                     </div>
                   </div>
                   <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-4">
@@ -431,7 +431,7 @@ function CitizenDashboardContent() {
                       size="lg" 
                       className="rounded-full w-16 h-16 bg-white hover:bg-gray-100 text-2xl shadow-lg border-4 border-gray-300"
                     >
-                      📸
+                      
                     </Button>
                     <Button 
                       type="button"
@@ -525,7 +525,7 @@ function CitizenDashboardContent() {
           >
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
               <h2 className="text-2xl font-bold mb-6 flex items-center">
-                <span className="text-3xl mr-3">📸</span>
+                <span className="text-3xl mr-3"></span>
                 Report Waste Issue
               </h2>
 
@@ -598,7 +598,7 @@ function CitizenDashboardContent() {
                             variant="outline"
                             className="mx-auto"
                           >
-                            📷 Open Camera
+                             Open Camera
                           </Button>
                         </div>
                         <p className="text-sm text-gray-500 mt-2">
@@ -616,7 +616,7 @@ function CitizenDashboardContent() {
                       Location Coordinates
                       {lat && lng && (
                         <span className="ml-2 text-xs text-green-600 dark:text-green-400 font-normal">
-                          ✓ Auto-detected
+                           Auto-detected
                         </span>
                       )}
                     </label>
@@ -646,7 +646,7 @@ function CitizenDashboardContent() {
                           d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                         />
                       </svg>
-                      🔄 Refresh Location
+                       Refresh Location
                     </Button>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -676,7 +676,7 @@ function CitizenDashboardContent() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className={`p-4 rounded-lg ${
-                      message.includes("🎉")
+                      message.includes("")
                         ? "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800"
                         : "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800"
                     }`}
@@ -696,7 +696,7 @@ function CitizenDashboardContent() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                       </svg>
-                      🤖 AI Classifying & Submitting...
+                       AI Classifying & Submitting...
                     </span>
                   ) : "Submit Waste Report"}
                 </Button>
@@ -712,13 +712,13 @@ function CitizenDashboardContent() {
                 }`}>
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-bold text-lg flex items-center gap-2">
-                      <span>{aiResult.categoryInfo?.icon || '🤖'}</span>
+                      <span>{aiResult.categoryInfo?.icon || ''}</span>
                       AI Classification Result
                     </h3>
                     {aiResult.aiPowered ? (
-                      <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full font-medium">✓ AI Powered</span>
+                      <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full font-medium"> AI Powered</span>
                     ) : (
-                      <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded-full font-medium">⚠ Fallback</span>
+                      <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded-full font-medium"> Fallback</span>
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -744,12 +744,12 @@ function CitizenDashboardContent() {
                   </div>
                   {aiResult.categoryDetail && (
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 italic">
-                      🔍 Detected: {aiResult.categoryDetail}
+                       Detected: {aiResult.categoryDetail}
                     </p>
                   )}
                   {aiResult.categoryInfo?.disposal && (
                     <p className="text-sm font-medium mt-2">
-                      🗑️ Disposal: {aiResult.categoryInfo.disposal}
+                      ️ Disposal: {aiResult.categoryInfo.disposal}
                     </p>
                   )}
                 </div>
@@ -766,7 +766,7 @@ function CitizenDashboardContent() {
               >
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
                   <h2 className="text-2xl font-bold mb-6 flex items-center">
-                    <span className="text-3xl mr-3">🏆</span>
+                    <span className="text-3xl mr-3"></span>
                     Your Badges
                   </h2>
                   <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
@@ -798,7 +798,7 @@ function CitizenDashboardContent() {
             >
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
                 <h2 className="text-2xl font-bold mb-6 flex items-center">
-                  <span className="text-3xl mr-3">📋</span>
+                  <span className="text-3xl mr-3"></span>
                   Your Reports
                 </h2>
 
@@ -877,7 +877,7 @@ function CitizenDashboardContent() {
             >
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
                 <h2 className="text-2xl font-bold mb-6 flex items-center">
-                  <span className="text-3xl mr-3">🏅</span>
+                  <span className="text-3xl mr-3"></span>
                   Leaderboard
                 </h2>
                 <div className="space-y-3">
@@ -891,7 +891,7 @@ function CitizenDashboardContent() {
                       }`}
                     >
                       <span className="text-2xl font-bold w-8">
-                        {idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : `#${idx + 1}`}
+                        {idx === 0 ? "" : idx === 1 ? "" : idx === 2 ? "" : `#${idx + 1}`}
                       </span>
                       <div className="flex-1">
                         <div className="font-semibold">{entry.name}</div>

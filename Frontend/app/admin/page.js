@@ -123,13 +123,13 @@ function AdminDashboardContent() {
             {
               title: "Total Users",
               value: stats.totalUsers,
-              icon: "👥",
+              icon: "",
               color: "from-blue-500 to-cyan-500",
             },
             {
               title: "Total Reports",
               value: stats.totalReports,
-              icon: "📊",
+              icon: "",
               color: "from-green-500 to-emerald-500",
             },
             {
@@ -141,7 +141,7 @@ function AdminDashboardContent() {
             {
               title: "Collected",
               value: stats.collectedReports,
-              icon: "✅",
+              icon: "",
               color: "from-purple-500 to-pink-500",
             },
           ].map((stat, idx) => (
@@ -374,11 +374,11 @@ function AdminDashboardContent() {
                             </span>
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                            📍 Location: {report.geoLocation?.coordinates[1]},{" "}
+                             Location: {report.geoLocation?.coordinates[1]},{" "}
                             {report.geoLocation?.coordinates[0]}
                           </p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                            👤 Reported by: {report.createdBy?.name || "Unknown"}
+                             Reported by: {report.createdBy?.name || "Unknown"}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                             {new Date(report.createdAt).toLocaleString()}

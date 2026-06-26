@@ -2,10 +2,10 @@
 Waste Category Mapper for Faster RCNN
 ======================================
 Maps COCO-pretrained Faster RCNN class labels (80 classes) to 4 waste categories:
-  ♻️  Dry    - Recyclable: plastic, glass, paper, metal
-  🌿  Wet    - Organic / biodegradable: food, plants
-  ⚡  E-Waste - Electronics: devices, batteries, appliances
-  🗑️  Mixed  - Unclassified / ambiguous
+  ️  Dry    - Recyclable: plastic, glass, paper, metal
+    Wet    - Organic / biodegradable: food, plants
+    E-Waste - Electronics: devices, batteries, appliances
+  ️  Mixed  - Unclassified / ambiguous
 
 Also supports mapping from the custom waste dataset (50+ classes)
 when a trained checkpoint is available.
@@ -239,28 +239,28 @@ def map_custom_label_to_waste_category(label: str) -> str:
 CATEGORY_INFO = {
     "Wet": {
         "color":       "#4CAF50",
-        "icon":        "🌿",
+        "icon":        "",
         "description": "Biodegradable organic waste (food, garden waste)",
         "disposal":    "Green compost bin",
         "examples":    ["Fruit peels", "Vegetable scraps", "Food leftovers", "Garden clippings"],
     },
     "Dry": {
         "color":       "#2196F3",
-        "icon":        "♻️",
+        "icon":        "️",
         "description": "Recyclable dry waste (plastic, paper, glass, metal)",
         "disposal":    "Blue recycling bin",
         "examples":    ["Plastic bottles", "Cardboard boxes", "Glass jars", "Metal cans"],
     },
     "E-Waste": {
         "color":       "#FF5722",
-        "icon":        "⚡",
+        "icon":        "",
         "description": "Electronic waste (devices, batteries, cables, appliances)",
         "disposal":    "Special e-waste collection center",
         "examples":    ["Mobile phones", "Laptops", "Batteries", "Chargers", "TVs"],
     },
     "Mixed": {
         "color":       "#9C27B0",
-        "icon":        "🗑️",
+        "icon":        "️",
         "description": "Mixed or unclassified waste requiring manual sorting",
         "disposal":    "Grey general waste bin",
         "examples":    ["Mixed garbage", "Unidentified items", "Composite materials"],

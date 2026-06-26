@@ -104,12 +104,12 @@ function checkBadges(user) {
   const points = user.points;
   
   const badgeDefinitions = [
-    { id: 'first_report', name: 'First Step', icon: '🌱' },
-    { id: 'reporter_5', name: 'Eco Starter', icon: '🌿' },
-    { id: 'reporter_10', name: 'Green Warrior', icon: '🌳' },
-    { id: 'reporter_25', name: 'Eco Champion', icon: '🏆' },
-    { id: 'reporter_50', name: 'Planet Saver', icon: '🌍' },
-    { id: 'points_100', name: 'Century Club', icon: '💯' },
+    { id: 'first_report', name: 'First Step', icon: '' },
+    { id: 'reporter_5', name: 'Eco Starter', icon: '' },
+    { id: 'reporter_10', name: 'Green Warrior', icon: '' },
+    { id: 'reporter_25', name: 'Eco Champion', icon: '' },
+    { id: 'reporter_50', name: 'Planet Saver', icon: '' },
+    { id: 'points_100', name: 'Century Club', icon: '' },
     { id: 'points_500', name: 'Points Master', icon: '⭐' },
   ];
   
