@@ -17,9 +17,12 @@ exports.register = async (req, res) => {
   if (!['Citizen', 'Municipal', 'Admin'].includes(role)) {
     return res.status(400).json({ msg: 'Invalid role' });
   }
+  const normalizedEmail = email.toLowerCase().trim();
+  const trimmedName = name.trim();
+
   // Email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+  if (!emailRegex.test(normalizedEmail)) {
     return res.status(400).json({ msg: 'Invalid email format' });
   }
   // Password strength (example: at least 8 chars)
@@ -27,13 +30,13 @@ exports.register = async (req, res) => {
     return res.status(400).json({ msg: 'Password must be at least 8 characters long' });
   }
   try {
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email: normalizedEmail });
     if (user) return res.status(400).json({ msg: 'User already exists' });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    user = await User.create({ email, password: hashedPassword, role, name });
+    user = await User.create({ email: normalizedEmail, password: hashedPassword, role, name: trimmedName });
 
     const payload = { userId: user._id, role: user.role };
     const token = jwt.sign(payload, tokenSecret, { expiresIn: '7d' });
@@ -50,13 +53,15 @@ exports.login = async (req, res) => {
   if (!email || !password) {
     return res.status(400).json({ msg: 'Email and password are required' });
   }
+  const normalizedEmail = email.toLowerCase().trim();
+
   // Email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+  if (!emailRegex.test(normalizedEmail)) {
     return res.status(400).json({ msg: 'Invalid email format' });
   }
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user) return res.status(400).json({ msg: 'User not registered' });
 
     const isMatch = await bcrypt.compare(password, user.password);
