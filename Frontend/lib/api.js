@@ -1,7 +1,13 @@
 import axios from 'axios';
 
+let apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+// Ensure base URL always ends with '/api' if not already present
+if (apiURL && !apiURL.endsWith('/api') && !apiURL.endsWith('/api/')) {
+  apiURL = apiURL.replace(/\/$/, '') + '/api';
+}
+
 const API = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+  baseURL: apiURL
 });
 
 // Add auth token to requests

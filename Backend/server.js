@@ -31,18 +31,19 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    // Check if origin is allowed or if wildcard '*' is in allowedOrigins
-    const isAllowed = allowedOrigins.includes(origin) || allowedOrigins.includes('*');
+    // Check if origin is allowed, or if wildcard '*' is used, or if it is a vercel subdomain
+    const isVercel = origin.endsWith('.vercel.app');
+    const isAllowed = allowedOrigins.includes(origin) || allowedOrigins.includes('*') || isVercel;
 
     if (isAllowed) {
       callback(null, true);
     } else {
-      console.warn(`CORS Blocked: Origin '${origin}' is not in allowed origins list:`, allowedOrigins);
-      callback(null, false); // Reject without throwing 500 error
+      console.warn(`CORS Blocked: Origin '${origin}' is not in allowed list:`, allowedOrigins);
+      callback(null, false);
     }
   },
   credentials: true,
-  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  optionsSuccessStatus: 200
 };
 
 // --- SETUP AND MIDDLEWARE ---
@@ -81,11 +82,21 @@ app.set('io', io);
 
 // --- ROUTES ---
 
+// Support both '/api/...' and '/...' prefixes to handle cases where the frontend baseURL is misconfigured without '/api'
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/auth', require('./routes/authRoutes'));
+
 app.use('/api/citizen', require('./routes/citizenRoutes'));
+app.use('/citizen', require('./routes/citizenRoutes'));
+
 app.use('/api/municipal', require('./routes/municipalRoutes'));
+app.use('/municipal', require('./routes/municipalRoutes'));
+
 app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/admin', require('./routes/adminRoutes'));
+
 app.use('/api/alerts', require('./routes/alertRoutes'));
+app.use('/alerts', require('./routes/alertRoutes'));
 
 // Start server
 const port = process.env.PORT || 5000;
