@@ -47,18 +47,46 @@ exports.sendReport = async (req, res) => {
       return res.status(400).json({ success: false, message: 'No analytics data to send.' });
     }
 
-    // Use Ethereal for testing, or use real SMTP if provided in .env
-    const testAccount = await nodemailer.createTestAccount();
-    
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.ethereal.email",
-      port: process.env.SMTP_PORT || 587,
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER || testAccount.user,
-        pass: process.env.SMTP_PASS || testAccount.pass,
-      },
-    });
+    let transporter;
+    let previewUrl = null;
+
+    const useRealSMTP = process.env.SMTP_USER && process.env.SMTP_PASS;
+
+    if (useRealSMTP) {
+      transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || "smtp.gmail.com",
+        port: parseInt(process.env.SMTP_PORT || "587"),
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+    } else {
+      try {
+        const testAccount = await nodemailer.createTestAccount();
+        transporter = nodemailer.createTransport({
+          host: "smtp.ethereal.email",
+          port: 587,
+          secure: false,
+          auth: {
+            user: testAccount.user,
+            pass: testAccount.pass,
+          },
+        });
+        previewUrl = true;
+      } catch (etherealErr) {
+        console.warn('Failed to create Ethereal test account:', etherealErr.message);
+        console.log('--- SIMULATED WASTE ANALYTICS REPORT ---');
+        console.log(JSON.stringify(analytics, null, 2));
+        console.log('----------------------------------------');
+        return res.json({
+          success: true,
+          message: 'Report generated successfully (Simulated Email - Ethereal offline)!',
+          previewUrl: 'https://ethereal.email'
+        });
+      }
+    }
 
     let htmlContent = `
       <h2>WALL.E Waste Analytics Report</h2>
@@ -92,19 +120,24 @@ exports.sendReport = async (req, res) => {
     `;
 
     let info = await transporter.sendMail({
-      from: '"WALL.E Admin" <admin@walle.local>',
+      from: process.env.SMTP_FROM || '"WALL.E Admin" <admin@walle.local>',
       to: process.env.MUNICIPAL_EMAIL || "municipal@walle.local",
       subject: "Waste Analytics Report",
       html: htmlContent,
     });
 
     console.log("Message sent: %s", info.messageId);
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    
+    let generatedPreviewUrl = null;
+    if (previewUrl) {
+      generatedPreviewUrl = nodemailer.getTestMessageUrl(info);
+      console.log("Preview URL: %s", generatedPreviewUrl);
+    }
 
     res.json({ 
       success: true, 
       message: 'Report sent successfully!', 
-      previewUrl: nodemailer.getTestMessageUrl(info) 
+      previewUrl: generatedPreviewUrl 
     });
   } catch (err) {
     console.error('Error sending report email:', err);
