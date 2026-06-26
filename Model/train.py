@@ -14,20 +14,60 @@ from model import get_model, save_model, load_model
 class CustomWetWasteDataset(Dataset):
     def __init__(self, folder_path):
         self.folder_path = folder_path
-        # Support common image extensions
-        self.image_paths = []
-        for ext in ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG']:
-            self.image_paths.extend(glob.glob(os.path.join(folder_path, ext)))
-        
-        self.image_paths = sorted(list(set(self.image_paths)))
-        print(f"Found {len(self.image_paths)} images in {folder_path}")
+        self.image_data = [] # List of tuples: (image_path, label_id)
         self.transform = T.Compose([T.ToTensor()])
+        
+        # Check for subdirectories first
+        subfolders = []
+        if os.path.exists(folder_path) and os.path.isdir(folder_path):
+            subfolders = [d for d in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, d))]
+        
+        # Mapping definition based on sorted: ['Dry', 'E-Waste', 'Mixed', 'Wet']
+        # 1-indexed: Dry=1, E-Waste=2, Mixed=3, Wet=4
+        label_mapping = {
+            'dry': 1,
+            'e-waste': 2,
+            'mixed': 3,
+            'wet': 4
+        }
+        
+        has_subdirs = False
+        for sub in subfolders:
+            sub_lower = sub.lower()
+            target_label = None
+            for key, val in label_mapping.items():
+                if key in sub_lower:
+                    target_label = val
+                    break
+            
+            if target_label is not None:
+                has_subdirs = True
+                sub_path = os.path.join(folder_path, sub)
+                # Find all images in this subfolder
+                sub_images = []
+                for ext in ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG']:
+                    sub_images.extend(glob.glob(os.path.join(sub_path, ext)))
+                
+                sub_images = sorted(list(set(sub_images)))
+                for img_path in sub_images:
+                    self.image_data.append((img_path, target_label))
+                print(f"Subfolder '{sub}' -> Mapped to class ID {target_label}. Found {len(sub_images)} images.")
+
+        if not has_subdirs:
+            # Fallback to single folder mode: all images treated as Wet waste (4)
+            image_paths = []
+            for ext in ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG']:
+                image_paths.extend(glob.glob(os.path.join(folder_path, ext)))
+            image_paths = sorted(list(set(image_paths)))
+            for img_path in image_paths:
+                self.image_data.append((img_path, 4))
+            print(f"No valid class subfolders found. Treating all {len(image_paths)} images as Wet waste (Class ID 4).")
 
     def __len__(self):
-        return len(self.image_paths)
+        return len(self.image_data)
 
     def __getitem__(self, idx):
-        img_path = self.image_paths[idx]
+        img_path, label_id = self.image_data[idx]
         img = Image.open(img_path).convert("RGB")
         width, height = img.size
         
@@ -37,9 +77,7 @@ class CustomWetWasteDataset(Dataset):
         # Bounding box for the entire image: [x_min, y_min, x_max, y_max]
         # In PyTorch Faster R-CNN, boxes must satisfy x_min < x_max and y_min < y_max
         boxes = torch.as_tensor([[2.0, 2.0, float(width - 2), float(height - 2)]], dtype=torch.float32)
-        
-        # Label 4 corresponds to 'Wet' waste in categories: ['Dry', 'E-Waste', 'Mixed', 'Wet']
-        labels = torch.as_tensor([4], dtype=torch.int64)
+        labels = torch.as_tensor([label_id], dtype=torch.int64)
         
         target = {
             "boxes": boxes,
@@ -126,6 +164,6 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         data_folder = sys.argv[1]
     else:
-        data_folder = r"D:\New folder\Wet waste"
+        data_folder = r"D:\New folder"
         
     train_model(data_folder)
