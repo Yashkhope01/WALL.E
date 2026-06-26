@@ -10,7 +10,7 @@ const Alert = require('./models/alert');
 // MongoDB connection
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-waste';
+    const mongoURI = process.env.MONGODB_URI ;
     await mongoose.connect(mongoURI);
     console.log('MongoDB connected');
   } catch (err) {
