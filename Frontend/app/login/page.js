@@ -59,10 +59,10 @@ export default function Login() {
             </p>
             <div className="space-y-4">
               {[
-                { icon: "", text: "Report waste with precise location" },
-                { icon: "", text: "Upload images for quick processing" },
-                { icon: "", text: "AI-powered waste classification" },
-                { icon: "", text: "Track your impact and contributions" },
+                { icon: "📍", text: "Report waste with precise location" },
+                { icon: "📸", text: "Upload images for quick processing" },
+                { icon: "🤖", text: "AI-powered waste classification" },
+                { icon: "📊", text: "Track your impact and contributions" },
               ].map((item, idx) => (
                 <div key={idx} className="flex items-center space-x-3">
                   <span className="text-3xl">{item.icon}</span>

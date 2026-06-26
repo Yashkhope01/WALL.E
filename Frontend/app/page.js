@@ -135,22 +135,22 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                icon: "",
+                icon: "📱",
                 title: "Easy Reporting",
                 description: "Snap a photo, add location, report instantly",
               },
               {
-                icon: "",
+                icon: "🧠",
                 title: "AI-Powered",
                 description: "Smart waste classification in seconds",
               },
               {
-                icon: "️",
+                icon: "🗺️",
                 title: "Real-time Tracking",
                 description: "See collection progress on your map",
               },
               {
-                icon: "",
+                icon: "📊",
                 title: "Insights & Analytics",
                 description: "Track impact and community contributions",
               }

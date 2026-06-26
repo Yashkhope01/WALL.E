@@ -57,7 +57,7 @@ export default function About() {
               viewport={{ once: true }}
               className="bg-gradient-to-br from-green-100 to-blue-100 dark:from-green-900/20 dark:to-blue-900/20 rounded-3xl p-12"
             >
-              <div className="text-6xl mb-4"></div>
+              <div className="text-6xl mb-4">🌍</div>
               <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
                 "Our mission is to revolutionize urban waste management by empowering communities with technology that makes environmental responsibility effortless."
               </p>
@@ -88,32 +88,32 @@ export default function About() {
               {
                 title: "Sustainability",
                 description: "We believe technology should serve the planet. Every feature is designed to reduce environmental impact.",
-                icon: ""
+                icon: "🌱"
               },
               {
                 title: "Community",
                 description: "Environmental change happens when citizens are empowered. We put communities at the center of everything.",
-                icon: ""
+                icon: "👥"
               },
               {
                 title: "Innovation",
                 description: "We combine cutting-edge AI with practical solutions to solve real-world waste management challenges.",
-                icon: ""
+                icon: "⚡"
               },
               {
                 title: "Transparency",
                 description: "Data should be accessible. We provide real-time insights so communities can track their environmental impact.",
-                icon: "️"
+                icon: "👁️"
               },
               {
                 title: "Efficiency",
                 description: "Smart automation saves time, resources, and money. Better technology means better outcomes for everyone.",
-                icon: "️"
+                icon: "⚙️"
               },
               {
                 title: "Responsibility",
                 description: "We're accountable to the communities and planet we serve. Impact matters more than metrics.",
-                icon: ""
+                icon: "🎯"
               }
             ].map((value, idx) => (
               <motion.div

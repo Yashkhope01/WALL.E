@@ -106,25 +106,25 @@ function MunicipalDashboardContent() {
             {
               title: "Total Reports",
               value: stats.total,
-              icon: "",
+              icon: "📊",
               color: "from-blue-500 to-cyan-500",
             },
             {
               title: "New Reports",
               value: stats.reported,
-              icon: "",
+              icon: "🆕",
               color: "from-red-500 to-orange-500",
             },
             {
               title: "In Progress",
               value: stats.inProgress,
-              icon: "",
+              icon: "🚧",
               color: "from-yellow-500 to-orange-500",
             },
             {
               title: "Collected",
               value: stats.collected,
-              icon: "",
+              icon: "✅",
               color: "from-green-500 to-emerald-500",
             },
           ].map((stat, idx) => (
@@ -236,7 +236,7 @@ function MunicipalDashboardContent() {
 
                       <div className="space-y-2 text-sm">
                         <p className="flex items-center gap-2">
-                          <span className="font-semibold"> Location:</span>
+                          <span className="font-semibold">📍 Location:</span>
                           <span className="text-gray-600 dark:text-gray-400">
                             Lat: {report.geoLocation?.coordinates[1]?.toFixed(4)}, Lng:{" "}
                             {report.geoLocation?.coordinates[0]?.toFixed(4)}
@@ -251,13 +251,13 @@ function MunicipalDashboardContent() {
                           </a>
                         </p>
                         <p className="flex items-center gap-2">
-                          <span className="font-semibold"> Reported by:</span>
+                          <span className="font-semibold">👤 Reported by:</span>
                           <span className="text-gray-600 dark:text-gray-400">
                             {report.createdBy?.name || "Unknown"} ({report.createdBy?.email})
                           </span>
                         </p>
                         <p className="flex items-center gap-2">
-                          <span className="font-semibold"> Reported at:</span>
+                          <span className="font-semibold">🕐 Reported at:</span>
                           <span className="text-gray-600 dark:text-gray-400">
                             {new Date(report.createdAt).toLocaleString()}
                           </span>
