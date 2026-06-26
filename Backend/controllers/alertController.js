@@ -1,9 +1,9 @@
 // backend/controllers/alertController.js
-const Alert = require('../models/Alert');
+const Alert = require('../models/alert');
 
 exports.getAlerts = async (req, res) => {
   // Assuming req.user is set by auth middleware
-  const userRole = req.user.role; 
+  const userRole = req.user.role;
   try {
     const alerts = await Alert.find({
       $or: [

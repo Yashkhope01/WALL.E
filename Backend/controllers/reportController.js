@@ -11,7 +11,7 @@ const FormData = require('form-data');
 const axios = require('axios');
 const Report = require('../models/Report');
 const User = require('../models/User');
-const Alert = require('../models/Alert');
+const Alert = require('../models/alert');
 
 // AI Service URL from environment (defaults to localhost:5001)
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:5001';
@@ -73,11 +73,11 @@ async function aiClassify(tempFilePath, originalName) {
     }
 
     return {
-      wasteType:        data.wasteType,
-      confidence:       data.confidence,
+      wasteType: data.wasteType,
+      confidence: data.confidence,
       confidencePercent: data.confidencePercent,
-      categoryDetail:   data.categoryDetail,
-      categoryInfo:     data.categoryInfo || {},
+      categoryDetail: data.categoryDetail,
+      categoryInfo: data.categoryInfo || {},
     };
 
   } catch (err) {
@@ -102,7 +102,7 @@ function checkBadges(user) {
   const badges = user.badges || [];
   const totalReports = user.totalReports;
   const points = user.points;
-  
+
   const badgeDefinitions = [
     { id: 'first_report', name: 'First Step', icon: '' },
     { id: 'reporter_5', name: 'Eco Starter', icon: '' },
@@ -112,7 +112,7 @@ function checkBadges(user) {
     { id: 'points_100', name: 'Century Club', icon: '' },
     { id: 'points_500', name: 'Points Master', icon: '⭐' },
   ];
-  
+
   const conditionMap = {
     'first_report': totalReports >= 1,
     'reporter_5': totalReports >= 5,
@@ -122,7 +122,7 @@ function checkBadges(user) {
     'points_100': points >= 100,
     'points_500': points >= 500,
   };
-  
+
   const newBadges = [];
   for (const badgeDef of badgeDefinitions) {
     const hasBadge = badges.some(b => b.id === badgeDef.id);
@@ -130,7 +130,7 @@ function checkBadges(user) {
       newBadges.push(badgeDef);
     }
   }
-  
+
   return newBadges;
 }
 
@@ -179,40 +179,40 @@ exports.submitReport = async (req, res) => {
       wasteType,
       submittedBy: req.user.userId,
     });
-    
+
     // --- GAMIFICATION: Update user stats ---
     const user = await User.findById(req.user.userId);
     const pointsEarned = calculatePoints(wasteType);
-    
+
     user.points = (user.points || 0) + pointsEarned;
     user.totalReports = (user.totalReports || 0) + 1;
     user.level = calculateLevel(user.points);
-    
+
     // Check for new badges
     const newBadges = checkBadges(user);
     if (newBadges.length > 0) {
       user.badges = [...(user.badges || []), ...newBadges];
     }
-    
+
     await user.save();
     // ------------------------------------
-    
+
     // Reload with User for emit
     report = await Report.findById(report._id).populate('submittedBy', 'name email');
-    
+
     // --- CREATE PERSISTENT ALERT ---
     const alertMessage = `New ${wasteType} waste report submitted by ${report.submittedBy.name} near Lat:${report.lat.toFixed(4)}/Lng:${report.lng.toFixed(4)}`;
-    await Alert.create({ 
-        message: alertMessage, 
-        severity: 'High', 
-        reportId: report._id,
-        targetRole: 'Municipal'
+    await Alert.create({
+      message: alertMessage,
+      severity: 'High',
+      reportId: report._id,
+      targetRole: 'Municipal'
     });
     // ------------------------------------
 
     const io = req.app.get('io');
     io.emit('newReport', report.toJSON());
-    
+
     // Transform report for frontend
     const transformedReport = {
       _id: report._id,
@@ -225,8 +225,8 @@ exports.submitReport = async (req, res) => {
       createdAt: report.createdAt,
       updatedAt: report.updatedAt
     };
-    
-    res.json({ 
+
+    res.json({
       report: transformedReport,
       classification: {
         wasteType: aiResult.wasteType,
@@ -252,7 +252,7 @@ exports.submitReport = async (req, res) => {
 exports.getMyReports = async (req, res) => {
   try {
     const reports = await Report.find({ submittedBy: req.user.userId }).sort({ createdAt: -1 });
-    
+
     // Transform reports to match frontend expectations
     const transformedReports = reports.map(report => ({
       _id: report._id,
@@ -265,7 +265,7 @@ exports.getMyReports = async (req, res) => {
       createdAt: report.createdAt,
       updatedAt: report.updatedAt
     }));
-    
+
     res.json({ reports: transformedReports });
   } catch (err) {
     res.status(500).json({ msg: 'Server error' });
@@ -275,16 +275,16 @@ exports.getMyReports = async (req, res) => {
 exports.getGamificationStats = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select('points totalReports badges level name');
-    
+
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
-    
+
     // Calculate next level progress
     const pointsForNextLevel = (user.level * 50);
     const currentLevelPoints = ((user.level - 1) * 50);
     const progressToNextLevel = ((user.points - currentLevelPoints) / (pointsForNextLevel - currentLevelPoints)) * 100;
-    
+
     res.json({
       stats: {
         points: user.points,
@@ -308,7 +308,7 @@ exports.getLeaderboard = async (req, res) => {
       .select('_id name points totalReports level badges')
       .sort({ points: -1 })
       .limit(10);
-    
+
     const leaderboard = topUsers.map((user, index) => ({
       rank: index + 1,
       name: user.name,
@@ -317,7 +317,7 @@ exports.getLeaderboard = async (req, res) => {
       level: user.level,
       badgeCount: (user.badges || []).length
     }));
-    
+
     res.json({ leaderboard });
   } catch (err) {
     console.error('Error fetching leaderboard:', err);
