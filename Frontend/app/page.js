@@ -78,15 +78,15 @@ export default function Home() {
               {/* Stats Row */}
               <div className="flex gap-8 pt-4">
                 <div>
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white">50K+</div>
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white">20+</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Waste Reports</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white">5K+</div>
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white">5+</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Active Users</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white">95%</div>
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white">90%</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Accuracy</div>
                 </div>
               </div>
