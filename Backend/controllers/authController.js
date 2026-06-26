@@ -7,6 +7,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const tokenSecret = process.env.JWT_SECRET || 'your_jwt_secret_key_change_this_in_production';
+
 exports.register = async (req, res) => {
   const { email, password, role, name } = req.body;
   if (!email || !password || !role || !name) {
@@ -34,7 +36,7 @@ exports.register = async (req, res) => {
     user = await User.create({ email, password: hashedPassword, role, name });
 
     const payload = { userId: user._id, role: user.role };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign(payload, tokenSecret, { expiresIn: '7d' });
 
     res.json({ user: { id: user._id, email: user.email, role: user.role, name: user.name }, token });
   } catch (err) {
@@ -61,7 +63,7 @@ exports.login = async (req, res) => {
     if (!isMatch) return res.status(400).json({ msg: 'Invalid password' });
 
     const payload = { userId: user._id, role: user.role };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign(payload, tokenSecret, { expiresIn: '7d' });
 
     res.json({ user: { id: user._id, email: user.email, role: user.role, name: user.name }, token });
   } catch (err) {
