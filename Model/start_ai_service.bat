@@ -26,8 +26,10 @@ echo Press Ctrl+C to stop.
 echo ============================================================
 echo.
 
-REM Start the Flask API
+REM Start the Flask API on port 5001 for local development
+REM (In production on HF Spaces, PORT=7860 is injected automatically)
 set PYTHONIOENCODING=utf-8
+set PORT=5001
 python waste_classifier_api.py
 
 pause

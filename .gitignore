@@ -22,10 +22,16 @@ __pycache__/
 /Model/Dataset/
 /Model/train_logs/
 
-# Environment files
+# Environment files — NEVER commit real secrets
 .env
-.env.*
+.env.local
+.env.development
+.env.production
+.env.test
 .envrc
+# Allow example/template env files (safe to commit)
+!.env.example
+!*.env.example
 
 # OS / Editor junk
 .DS_Store

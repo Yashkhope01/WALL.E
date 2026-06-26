@@ -16,5 +16,17 @@ API.interceptors.request.use(config => {
   return config;
 });
 
+// Handle expired/invalid token — redirect to login
+API.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
+      localStorage.removeItem('auth');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default API;
 

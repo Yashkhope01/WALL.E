@@ -16,27 +16,54 @@ const { mongoose } = require('./db'); // Import mongoose connection
 
 const app = express();
 
+// --- CORS CONFIGURATION ---
+// In production, set ALLOWED_ORIGINS in Render's environment variables.
+// Multiple origins can be comma-separated:
+//   ALLOWED_ORIGINS=https://walle.vercel.app,https://my-custom-domain.com
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+  : ['http://localhost:3000'];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (curl, Postman, Render health checks)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS: origin '${origin}' not allowed`));
+    }
+  },
+  credentials: true,
+};
+
 // --- SETUP AND MIDDLEWARE ---
 
 // Define upload directory path
 const UPLOAD_DIR = path.join(__dirname, 'uploads');
 
-// Create uploads directory if it doesn't exist (Fixes ENOENT)
+// Create uploads directory if it doesn't exist
 if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR);
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
   console.log(`Created upload directory at: ${UPLOAD_DIR}`);
 }
 
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static(UPLOAD_DIR));
 
-// Create HTTP server and Socket.IO (Must be defined before app.set('io', io))
+// Root health-check — Render's health monitor and uptime services ping GET /
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', service: 'WALL.E API', version: '1.0.0' });
+});
+
+// Create HTTP server and Socket.IO
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: '*', // Allow all origins for development; restrict in production
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
 
@@ -49,7 +76,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/citizen', require('./routes/citizenRoutes'));
 app.use('/api/municipal', require('./routes/municipalRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
-app.use('/api/alerts', require('./routes/alertRoutes')); // <-- NEW: Alert Route
+app.use('/api/alerts', require('./routes/alertRoutes'));
 
 // Start server
 const port = process.env.PORT || 5000;

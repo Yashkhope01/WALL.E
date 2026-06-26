@@ -33,7 +33,49 @@ function CitizenDashboardContent() {
     fetchReports();
     fetchGamificationStats();
     fetchLeaderboard();
+    getLocation();
   }, []);
+
+  const getLocationFromIP = async () => {
+    try {
+      const res = await fetch("https://ipapi.co/json/");
+      const data = await res.json();
+      if (data.latitude && data.longitude) {
+        setLat(data.latitude.toFixed(6));
+        setLng(data.longitude.toFixed(6));
+        setMessage("📍 Location set via IP (approximate)");
+        setTimeout(() => setMessage(""), 3000);
+      } else {
+        setMessage("⚠️ Could not detect location. Please enter manually.");
+        setTimeout(() => setMessage(""), 4000);
+      }
+    } catch {
+      setMessage("⚠️ Could not detect location. Please enter manually.");
+      setTimeout(() => setMessage(""), 4000);
+    }
+  };
+
+  const getLocation = () => {
+    if ("geolocation" in navigator) {
+      setMessage("📍 Detecting your location...");
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLat(position.coords.latitude.toFixed(6));
+          setLng(position.coords.longitude.toFixed(6));
+          setMessage("✅ Location detected!");
+          setTimeout(() => setMessage(""), 3000);
+        },
+        () => {
+          // GPS denied — fall back to IP geolocation
+          setMessage("📍 GPS unavailable, trying IP location...");
+          getLocationFromIP();
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    } else {
+      getLocationFromIP();
+    }
+  };
 
   const fetchReports = async () => {
     try {
@@ -199,25 +241,7 @@ function CitizenDashboardContent() {
     setCapturedPreview(null);
   };
 
-  const getCurrentLocation = () => {
-    if ("geolocation" in navigator) {
-      setMessage("Getting your location...");
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLat(position.coords.latitude.toFixed(6));
-          setLng(position.coords.longitude.toFixed(6));
-          setMessage("Location captured successfully!");
-          setTimeout(() => setMessage(""), 3000);
-        },
-        (error) => {
-          setMessage("Unable to get location. Please enter manually.");
-          setTimeout(() => setMessage(""), 3000);
-        }
-      );
-    } else {
-      setMessage("Geolocation is not supported by your browser");
-    }
-  };
+  const getCurrentLocation = () => getLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -276,7 +300,7 @@ function CitizenDashboardContent() {
       fetchGamificationStats();
       fetchLeaderboard();
     } catch (err) {
-      setMessage(err.response?.data?.message || "Failed to submit report");
+      setMessage(err.response?.data?.message || err.response?.data?.msg || "Failed to submit report");
     } finally {
       setLoading(false);
     }
@@ -590,6 +614,11 @@ function CitizenDashboardContent() {
                   <div className="flex justify-between items-center mb-3">
                     <label className="block text-sm font-medium">
                       Location Coordinates
+                      {lat && lng && (
+                        <span className="ml-2 text-xs text-green-600 dark:text-green-400 font-normal">
+                          ✓ Auto-detected
+                        </span>
+                      )}
                     </label>
                     <Button
                       type="button"
@@ -617,7 +646,7 @@ function CitizenDashboardContent() {
                           d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                         />
                       </svg>
-                      Use Current Location
+                      🔄 Refresh Location
                     </Button>
                   </div>
                   <div className="grid grid-cols-2 gap-4">

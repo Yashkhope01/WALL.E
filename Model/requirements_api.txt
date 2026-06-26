@@ -5,10 +5,9 @@
 torch>=2.0.0
 torchvision>=0.15.0
 
-# Image processing
+# Image processing (Pillow handles all I/O — no opencv needed in production)
 Pillow>=10.0.0
 numpy>=1.24.0
-opencv-python>=4.8.0
 
 # API framework
 flask>=3.0.0
@@ -16,3 +15,6 @@ flask-cors>=4.0.0
 
 # Data (needed when loading custom CSV label mappings)
 pandas>=2.0.0
+
+# Production WSGI server (used by Dockerfile CMD)
+gunicorn>=21.0.0

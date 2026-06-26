@@ -40,8 +40,8 @@ function RegisterContent() {
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long");
       return;
     }
 
@@ -65,7 +65,7 @@ function RegisterContent() {
         router.push("/citizen");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed. Please try again.");
+      setError(err.response?.data?.message || err.response?.data?.msg || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }

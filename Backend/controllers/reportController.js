@@ -6,7 +6,9 @@
 
 const multer = require('multer');
 const path = require('path');
-const fetch = require('node-fetch');
+const fs = require('fs');
+const FormData = require('form-data');
+const axios = require('axios');
 const Report = require('../models/Report');
 const User = require('../models/User');
 const Alert = require('../models/Alert');
@@ -36,44 +38,49 @@ function fallbackClassify() {
 }
 
 /**
- * AI Classification: calls the Python Flask AI service.
- * Sends the absolute path of the uploaded image for classification.
+ * AI Classification: streams image bytes directly to the Flask AI service.
+ * Uses form-data so no shared filesystem is required between Render and HF Spaces.
  *
- * @param {string} absoluteImagePath - Full disk path to the uploaded image
+ * @param {string} tempFilePath  - Absolute path to Multer's temporary file on disk
+ * @param {string} originalName  - Original filename (for Content-Type inference)
  * @returns {Promise<{wasteType, confidence, confidencePercent, categoryDetail, categoryInfo}>}
  */
-async function aiClassify(absoluteImagePath) {
+async function aiClassify(tempFilePath, originalName) {
+  const form = new FormData();
+  // Stream the temp file directly — never loads the whole file into memory
+  form.append('image', fs.createReadStream(tempFilePath), {
+    filename: originalName || 'upload.jpg',
+    contentType: 'image/jpeg',
+  });
+
   try {
-    const response = await fetch(`${AI_SERVICE_URL}/classify/path`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image_path: absoluteImagePath }),
-      timeout: 15000  // 15 second timeout
-    });
+    const response = await axios.post(
+      `${AI_SERVICE_URL}/classify`,
+      form,
+      {
+        headers: form.getHeaders(),
+        timeout: 30000, // 30 s — HF Spaces free tier can be slow to wake
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+      }
+    );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.warn(`AI service returned ${response.status}: ${errorText}`);
-      return fallbackClassify();
-    }
-
-    const data = await response.json();
+    const data = response.data;
 
     if (!data.success) {
-      console.warn('AI service error:', data.message);
+      console.warn('AI service returned failure:', data.message);
       return fallbackClassify();
     }
 
     return {
-      wasteType: data.wasteType,
-      confidence: data.confidence,
+      wasteType:        data.wasteType,
+      confidence:       data.confidence,
       confidencePercent: data.confidencePercent,
-      categoryDetail: data.categoryDetail,
-      categoryInfo: data.categoryInfo || {}
+      categoryDetail:   data.categoryDetail,
+      categoryInfo:     data.categoryInfo || {},
     };
 
   } catch (err) {
-    // If AI service is not running, fall back to mock
     console.warn('AI service unavailable, using fallback classifier:', err.message);
     return fallbackClassify();
   }
@@ -136,21 +143,29 @@ exports.submitReport = async (req, res) => {
   const { lat, lng } = req.body;
   if (!req.file) return res.status(400).json({ msg: 'No image uploaded' });
 
+  const tempFilePath = req.file.path;
   const imageUrl = `/uploads/${req.file.filename}`;
 
-  // Run AI classification on the uploaded image
-  const absoluteImagePath = req.file.path || path.join(__dirname, '..', 'uploads', req.file.filename);
-  const aiResult = await aiClassify(absoluteImagePath);
+  // Stream image bytes to the Flask AI service, then delete the temp file
+  const aiResult = await aiClassify(tempFilePath, req.file.originalname);
+
+  // Clean up temp file from Render's ephemeral disk immediately
+  try {
+    fs.unlinkSync(tempFilePath);
+  } catch (cleanupErr) {
+    console.warn('Could not delete temp file:', cleanupErr.message);
+  }
+
   const wasteType = aiResult.wasteType;
 
   // Determine area using OpenStreetMap Nominatim reverse geocoding
   let area = 'Unknown';
   try {
-    const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`);
-    if (geoRes.ok) {
-      const geoData = await geoRes.json();
-      area = geoData.address?.city || geoData.address?.town || geoData.address?.village || geoData.address?.county || geoData.address?.state_district || 'Unknown';
-    }
+    const geoRes = await axios.get(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`
+    );
+    const addr = geoRes.data?.address;
+    area = addr?.city || addr?.town || addr?.village || addr?.county || addr?.state_district || 'Unknown';
   } catch (err) {
     console.warn('Geocoding failed:', err.message);
   }

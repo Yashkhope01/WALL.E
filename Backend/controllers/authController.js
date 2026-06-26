@@ -34,7 +34,7 @@ exports.register = async (req, res) => {
     user = await User.create({ email, password: hashedPassword, role, name });
 
     const payload = { userId: user._id, role: user.role };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     res.json({ user: { id: user._id, email: user.email, role: user.role, name: user.name }, token });
   } catch (err) {
@@ -61,7 +61,7 @@ exports.login = async (req, res) => {
     if (!isMatch) return res.status(400).json({ msg: 'Invalid password' });
 
     const payload = { userId: user._id, role: user.role };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     res.json({ user: { id: user._id, email: user.email, role: user.role, name: user.name }, token });
   } catch (err) {

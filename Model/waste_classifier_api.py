@@ -455,4 +455,6 @@ if __name__ == "__main__":
     print("         -F 'image=@/path/to/waste_image.jpg'")
     print("=" * 65)
 
-    app.run(host="0.0.0.0", port=5001, debug=False, threaded=True)
+    port = int(os.environ.get("PORT", 7860))
+    print(f"📡 Listening on http://0.0.0.0:{port}")
+    app.run(host="0.0.0.0", port=port, debug=False, threaded=True)
