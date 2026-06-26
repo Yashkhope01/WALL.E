@@ -5,7 +5,7 @@ require('dotenv').config();
 // Import Mongoose models
 const User = require('./models/User');
 const Report = require('./models/Report');
-const Alert = require('./models/Alert');
+const Alert = require('./models/alert');
 
 // MongoDB connection
 const connectDB = async () => {
