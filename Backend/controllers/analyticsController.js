@@ -123,7 +123,7 @@ exports.sendReport = async (req, res) => {
     try {
       info = await transporter.sendMail({
         from: process.env.SMTP_FROM || '"WALL.E Admin" <admin@walle.local>',
-        to: process.env.MUNICIPAL_EMAIL || "municipal@walle.local",
+        to: process.env.MUNICIPAL_EMAIL || "yashkhope123@gmail.com",
         subject: "Waste Analytics Report",
         html: htmlContent,
       });
