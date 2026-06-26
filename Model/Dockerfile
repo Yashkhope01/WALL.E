@@ -24,6 +24,10 @@ RUN pip install --no-cache-dir -r requirements_api.txt
 COPY waste_classifier_api.py .
 COPY waste_category_mapper.py .
 COPY model.py .
+COPY train.py .
+
+# Copy dataset mapping CSV and metadata
+COPY Dataset/ ./Dataset/
 
 # Copy model checkpoint if it exists (optional — falls back to COCO pretrained)
 # If best_model.pth is in checkpoints/, copy the whole directory
